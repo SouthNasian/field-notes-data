@@ -18,6 +18,7 @@ export function SiteHeader() {
         </button>
         <nav id="primary-nav" className={open ? "nav-open" : ""} aria-label="Primary navigation">
           <Link href="/inquiries" onClick={close}>Inquiries</Link>
+          <Link href="/field-notes" onClick={close}>Field Notes</Link>
           <Link href="/ai-analytics" onClick={close}>AI + Analytics</Link>
           <Link href="/about" onClick={close}>About</Link>
           <Link href="/contact" onClick={close}>Contact</Link>
