@@ -5,10 +5,74 @@ import {PortableArticle} from "@/sanity/components/PortableArticle";
 import {sanityFetch} from "@/sanity/lib/fetch";
 import {CASE_STUDY_QUERY} from "@/sanity/lib/queries";
 import type {PortableTextBlock} from "@portabletext/types";
+import type { Metadata } from "next";
 
 type Item={title:string;subtitle?:string|null;slug:string;publishedAt?:string|null;logNumber?:number|null;body?:PortableTextBlock[];businessChallenge?:string|null;intendedAudience?:string|null;decisionSupported?:string|null;dashboardUrl?:string|null;tools?:string[]|null;dataSources?:{name?:string;url?:string;notes?:string}[]|null;aiAssistance?:string|null;humanJudgment?:string|null;limitations?:string|null;categories?:string[]|null};
 
 const date=(v?:string|null)=>v?new Intl.DateTimeFormat("en-US",{year:"numeric",month:"long",day:"numeric"}).format(new Date(v)):"DATE NOT SET";
+
+
+type CaseStudyMetadata = {
+  title: string;
+  subtitle?: string | null;
+  slug: string;
+};
+
+type CaseStudyPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+
+export async function generateMetadata({
+  params,
+}: CaseStudyPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const item = await sanityFetch<CaseStudyMetadata | null>({
+    query: CASE_STUDY_QUERY,
+    params: { slug },
+  });
+
+  if (!item) {
+    return {
+      title: "Case Study Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    item.subtitle?.trim() ||
+    "A professional case study exploring business challenges through data visualization, analytics, and AI-assisted problem-solving.";
+
+  const url = `/case-studies/${encodeURIComponent(slug)}`;
+
+  return {
+    title: item.title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "article",
+      siteName: "Field Notes & Data",
+      title: `${item.title} | Field Notes & Data`,
+      description,
+      url,
+      images: [
+        {
+          url: "/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Field Notes & Data — Digital Expedition Log",
+        },
+      ],
+    },
+  };
+}
+
 
 export default async function CaseStudyPage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params; const item=await sanityFetch<Item|null>({query:CASE_STUDY_QUERY,params:{slug}}); if(!item)notFound();

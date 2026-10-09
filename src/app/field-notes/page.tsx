@@ -1,10 +1,25 @@
+import type { Metadata } from "next";
 import {LiveContentCard} from "@/components/LiveContentCard";
 import {sanityFetch} from "@/sanity/lib/fetch";
 import {FIELD_NOTES_QUERY} from "@/sanity/lib/queries";
 
+
+
+
+
+
 type Item={_id:string;title:string;subtitle?:string|null;slug:string;logNumber?:number|null;categories?:string[]|null;tags?:string[]|null};
 
-export const metadata={title:"Field Notes"};
+
+export const metadata = {
+  title: "Field Notes",
+  description:
+    "Read observations and experiences from the field, including travel, hunting, dog training, grappling, and lessons discovered along the way.",
+  alternates: {
+    canonical: "/field-notes",
+  },
+};
+
 
 export default async function FieldNotesPage(){
  const items=await sanityFetch<Item[]>({query:FIELD_NOTES_QUERY});

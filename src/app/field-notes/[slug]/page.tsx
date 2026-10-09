@@ -4,9 +4,74 @@ import {PortableArticle} from "@/sanity/components/PortableArticle";
 import {sanityFetch} from "@/sanity/lib/fetch";
 import {FIELD_NOTE_QUERY} from "@/sanity/lib/queries";
 import type {PortableTextBlock} from "@portabletext/types";
+import type { Metadata } from "next";
 
 type Item={title:string;subtitle?:string|null;publishedAt?:string|null;fieldDate?:string|null;fieldLocation?:string|null;logNumber?:number|null;categories?:string[]|null;body?:PortableTextBlock[];humanJudgment?:string|null;limitations?:string|null};
 const date=(v?:string|null)=>v?new Intl.DateTimeFormat("en-US",{year:"numeric",month:"long",day:"numeric"}).format(new Date(v)):"DATE NOT SET";
+
+
+type FieldNoteMetadata = {
+  title: string;
+  subtitle?: string | null;
+  slug: string;
+};
+
+type FieldNotePageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+
+export async function generateMetadata({
+  params,
+}: FieldNotePageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const item = await sanityFetch<FieldNoteMetadata | null>({
+    query: FIELD_NOTE_QUERY,
+    params: { slug },
+  });
+
+  if (!item) {
+    return {
+      title: "Field Note Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    item.subtitle?.trim() ||
+    "A Field Notes & Data journal entry exploring observations, experiences, and insights from the field.";
+
+  const url = `/field-notes/${encodeURIComponent(slug)}`;
+
+  return {
+    title: item.title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "article",
+      siteName: "Field Notes & Data",
+      title: `${item.title} | Field Notes & Data`,
+      description,
+      url,
+      images: [
+        {
+          url: "/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Field Notes & Data — Digital Expedition Log",
+        },
+      ],
+    },
+  };
+}
+
+
 
 export default async function FieldNotePage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params;const item=await sanityFetch<Item|null>({query:FIELD_NOTE_QUERY,params:{slug}});if(!item)notFound();

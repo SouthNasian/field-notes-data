@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
-export const metadata = { title: "About" };
+
+export const metadata = {
+  title: "About",
+  description:
+    "Learn about Field Notes & Data, a portfolio and field journal exploring data visualization, analytics, AI-assisted investigation, and curiosity.",
+  alternates: {
+    canonical: "/about",
+  },
+};
 
 export default function AboutPage() {
   return (

@@ -4,7 +4,16 @@ import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { CASE_STUDIES_QUERY, INQUIRIES_QUERY } from "@/sanity/lib/queries";
 
-export const metadata={title:"AI + Analytics"};
+
+export const metadata = {
+  title: "AI + Analytics",
+  description:
+    "Explore AI-assisted analytics, data visualization, business intelligence, and practical approaches to turning real data into useful insights.",
+  alternates: {
+    canonical: "/ai-analytics",
+  },
+};
+
 
 type Item={_id:string;title:string;subtitle?:string|null;slug:string;logNumber?:number|null;categories?:string[]|null;tags?:string[]|null};
 

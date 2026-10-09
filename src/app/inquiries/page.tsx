@@ -2,7 +2,16 @@ import { CmsContentCard } from "@/components/CmsContentCard";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { INQUIRIES_QUERY } from "@/sanity/lib/queries";
 
-export const metadata = { title: "Inquiries" };
+
+export const metadata = {
+  title: "Inquiries",
+  description:
+    "Explore questions through real data, AI-assisted analysis, and visualization. Investigations into business, travel, grappling, hunting, and more.",
+  alternates: {
+    canonical: "/inquiries",
+  },
+};
+
 
 type Inquiry = {
   _id:string; title:string; subtitle?:string|null; slug:string;

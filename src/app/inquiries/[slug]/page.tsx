@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleShell } from "@/components/ArticleShell";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
@@ -18,6 +19,64 @@ function displayDate(value?:string|null) {
   if (!value) return "DATE NOT SET";
   return new Intl.DateTimeFormat("en-US",{year:"numeric",month:"long",day:"numeric"}).format(new Date(value));
 }
+
+
+type InquiryPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+
+export async function generateMetadata({
+  params,
+}: InquiryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const item = await sanityFetch<Inquiry | null>({
+    query: INQUIRY_QUERY,
+    params: { slug },
+  });
+
+  if (!item) {
+    return {
+      title: "Inquiry Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    item.subtitle?.trim() ||
+    "An AI-assisted inquiry exploring questions through real data, analysis, and visualization.";
+
+  const url = `/inquiries/${encodeURIComponent(slug)}`;
+
+  return {
+    title: item.title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "article",
+      siteName: "Field Notes & Data",
+      title: `${item.title} | Field Notes & Data`,
+      description,
+      url,
+      images: [
+        {
+          url: "/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Field Notes & Data — Digital Expedition Log",
+        },
+      ],
+    },
+  };
+}
+
+
 
 export default async function InquiryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -1,4 +1,13 @@
-export const metadata = { title: "Contact" };
+
+export const metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with Field Notes & Data to discuss data visualization, business intelligence, AI-assisted analytics, and professional opportunities.",
+  alternates: {
+    canonical: "/contact",
+  },
+};
+
 
 export default function ContactPage() {
   return (
