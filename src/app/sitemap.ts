@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
 import { defineQuery } from "next-sanity";
-import { sanityFetch } from "@/sanity/lib/fetch";
+import { client } from "@/sanity/lib/client";
 
-export const revalidate = 3600;
+
 
 const BASE_URL = "https://fieldnotesanddata.com";
 
@@ -48,10 +48,19 @@ const postPaths: Record<SitemapPost["contentType"], string> = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [posts, expeditions] = await Promise.all([
-    sanityFetch<SitemapPost[]>({ query: SITEMAP_POSTS_QUERY }),
-    sanityFetch<SitemapExpedition[]>({ query: SITEMAP_EXPEDITIONS_QUERY }),
-  ]);
+const [posts, expeditions] = await Promise.all([
+  client
+    .withConfig({ useCdn: false, perspective: "published" })
+    .fetch<SitemapPost[]>(SITEMAP_POSTS_QUERY, {}, {
+      cache: "no-store",
+    }),
+
+  client
+    .withConfig({ useCdn: false, perspective: "published" })
+    .fetch<SitemapExpedition[]>(SITEMAP_EXPEDITIONS_QUERY, {}, {
+      cache: "no-store",
+    }),
+]);
 
   const staticPaths = [
     "/",
