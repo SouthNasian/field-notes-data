@@ -1,0 +1,153 @@
+year,geography,area_fips,ownership,ownership_code,industry_code,industry_name,industry_level,annual_avg_employment,average_weekly_wage_usd,total_annual_wages_usd,annual_avg_establishments,disclosure_code,is_suppressed,source_file
+2019,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4498572.0,1007.0,235631414489.0,286744.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,3793234.0,1010.0,199152630808.0,278786.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,26711.0,729.0,1013162716.0,3168.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3118.0,1269.0,205677259.0,211.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,14254.0,1866.0,1383324014.0,569.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,231739.0,1096.0,13203080265.0,27974.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,477086.0,1175.0,29147529064.0,10247.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,187278.0,1470.0,14315176699.0,20293.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,501496.0,573.0,14939921246.0,34249.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,143149.0,952.0,7083476847.0,7286.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,51,Information,NAICS sector,75919.0,1674.0,6607904586.0,5669.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,184433.0,1967.0,18866135535.0,15289.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,61470.0,1013.0,3237030270.0,13383.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,54,Professional and technical services,NAICS sector,264558.0,1642.0,22588453402.0,39880.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,84852.0,2176.0,9599182262.0,1815.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,56,Administrative and waste services,NAICS sector,300337.0,756.0,11803604966.0,19626.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,88990.0,1006.0,4653281514.0,3711.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,517574.0,957.0,25749354248.0,24488.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,74489.0,609.0,2359061010.0,4276.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,440663.0,357.0,8181123832.0,22198.0,,False,2019_annual_by_area.zip
+2019,North Carolina,37000,Private sector,5,81,"Other services, except public administration",NAICS sector,115119.0,704.0,4216151073.0,24457.0,,False,2019_annual_by_area.zip
+2020,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4323325.0,1081.0,243032109324.0,298506.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,3632182.0,1087.0,205285180374.0,290448.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,26418.0,770.0,1057461257.0,3216.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3142.0,1257.0,205339245.0,211.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,14297.0,1898.0,1411172976.0,610.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,229369.0,1138.0,13573388496.0,29231.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,452637.0,1217.0,28643352967.0,10303.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,182653.0,1567.0,14883017664.0,20602.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,488894.0,622.0,15818298711.0,34629.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,158921.0,936.0,7735525435.0,7613.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,51,Information,NAICS sector,73440.0,1850.0,7065436630.0,6302.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,192035.0,2117.0,21139569521.0,16053.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,59637.0,1074.0,3331466233.0,14223.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,54,Professional and technical services,NAICS sector,267393.0,1728.0,24023546075.0,42227.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,82593.0,2291.0,9837966631.0,1834.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,56,Administrative and waste services,NAICS sector,287733.0,809.0,12103843926.0,20783.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,83929.0,1083.0,4725358311.0,3932.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,500967.0,1014.0,26421246503.0,25582.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,55098.0,699.0,2002229958.0,4422.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,365323.0,370.0,7020705516.0,22593.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,81,"Other services, except public administration",NAICS sector,107703.0,765.0,4285927467.0,26011.0,,False,2020_annual_by_area.zip
+2020,North Carolina,37000,Private sector,5,99,Unclassified,NAICS sector,1.0,8381.0,326852.0,72.0,,False,2020_annual_by_area.zip
+2021,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4509160.0,1146.0,268717684355.0,315112.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,3828857.0,1156.0,230112962225.0,307240.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,25038.0,809.0,1053333555.0,3144.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3117.0,1376.0,223082518.0,213.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,14377.0,1878.0,1404229625.0,647.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,238391.0,1183.0,14665572879.0,30472.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,464007.0,1267.0,30579557844.0,10362.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,190432.0,1670.0,16534407649.0,21250.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,510685.0,682.0,18101401194.0,35448.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,176915.0,958.0,8810398382.0,8501.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,51,Information,NAICS sector,77323.0,2044.0,8220274575.0,7251.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,207123.0,2222.0,23936040311.0,16910.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,63432.0,1162.0,3834298411.0,15046.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,54,Professional and technical services,NAICS sector,290030.0,1885.0,28429296369.0,46710.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,76788.0,2444.0,9757859876.0,1830.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,56,Administrative and waste services,NAICS sector,311545.0,885.0,14344034843.0,22157.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,88312.0,1111.0,5103175384.0,4257.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,517868.0,1089.0,29325647970.0,28212.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,62656.0,727.0,2368327402.0,4629.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,395871.0,419.0,8632823002.0,23285.0,,False,2021_annual_by_area.zip
+2021,North Carolina,37000,Private sector,5,81,"Other services, except public administration",NAICS sector,114950.0,801.0,4789200436.0,26920.0,,False,2021_annual_by_area.zip
+2022,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4699554.0,1216.0,297095798677.0,347032.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,4018296.0,1224.0,255730519363.0,339053.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,24836.0,867.0,1119290183.0,3322.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3114.0,1667.0,269909747.0,229.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,15092.0,2077.0,1629843452.0,690.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,247861.0,1273.0,16410457467.0,33449.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,473254.0,1307.0,32168692537.0,10920.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,202176.0,1761.0,18516190231.0,22836.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,519262.0,727.0,19622767071.0,36734.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,181961.0,1041.0,9850936912.0,9930.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,51,Information,NAICS sector,81629.0,2125.0,9019832367.0,8870.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,219438.0,2321.0,26484538324.0,18479.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,68546.0,1260.0,4491916758.0,16950.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,54,"Professional, scientific, and technical services",NAICS sector,318301.0,1947.0,32226935842.0,54770.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,83302.0,2630.0,11391034575.0,1927.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,56,Administrative and support and waste management and remediation services,NAICS sector,334658.0,983.0,17107772969.0,24944.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,94711.0,1135.0,5591220865.0,4846.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,527916.0,1149.0,31528810500.0,31641.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,71696.0,749.0,2791228395.0,5123.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,428502.0,452.0,10063245344.0,24529.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,81,Other services (except public administration),NAICS sector,122038.0,858.0,5445590671.0,28799.0,,False,2022_annual_by_area.zip
+2022,North Carolina,37000,Private sector,5,99,Unclassified,NAICS sector,6.0,1036.0,305153.0,66.0,,False,2022_annual_by_area.zip
+2023,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4830118.0,1262.0,316970587546.0,374991.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,4133598.0,1271.0,273252474598.0,366799.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,25167.0,889.0,1163532799.0,3447.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3368.0,1473.0,257960220.0,237.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,15632.0,2085.0,1695025801.0,730.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,261427.0,1357.0,18451953302.0,36233.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,469557.0,1363.0,33278941635.0,11393.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,208586.0,1856.0,20128884849.0,23934.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,524364.0,742.0,20224521734.0,38382.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,181614.0,1096.0,10353616963.0,11001.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,51,Information,NAICS sector,85045.0,2292.0,10136813870.0,10125.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,228427.0,2373.0,28188118083.0,19767.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,71352.0,1280.0,4749638579.0,18278.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,54,"Professional, scientific, and technical services",NAICS sector,329958.0,2026.0,34756226152.0,61038.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,86213.0,2649.0,11877688292.0,2055.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,56,Administrative and support and waste management and remediation services,NAICS sector,329438.0,1036.0,17744348862.0,27473.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,100275.0,1200.0,6256022242.0,5366.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,554244.0,1174.0,33827683407.0,33688.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,77886.0,759.0,3075810675.0,5594.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,452703.0,471.0,11083813188.0,26052.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,81,Other services (except public administration),NAICS sector,128322.0,899.0,6000384699.0,30664.0,,False,2023_annual_by_area.zip
+2023,North Carolina,37000,Private sector,5,99,Unclassified,NAICS sector,20.0,1432.0,1489246.0,1345.0,,False,2023_annual_by_area.zip
+2024,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4901211.0,1322.0,336814764960.0,376914.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,4184582.0,1330.0,289327026481.0,368542.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,24725.0,931.0,1197560746.0,3330.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,3689.0,2075.0,397984351.0,242.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,15618.0,2157.0,1751542312.0,766.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,272147.0,1429.0,20225382859.0,36186.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,465130.0,1434.0,34679463460.0,11477.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,207667.0,1928.0,20815519420.0,23622.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,524832.0,752.0,20523711647.0,38080.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,183251.0,1155.0,11005160060.0,10471.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,51,Information,NAICS sector,85803.0,2510.0,11198732674.0,10373.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,232000.0,2504.0,30203473947.0,19888.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,72329.0,1335.0,5021658010.0,18290.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,54,"Professional, scientific, and technical services",NAICS sector,334395.0,2132.0,37078619952.0,61995.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,83908.0,2769.0,12082966150.0,2292.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,56,Administrative and support and waste management and remediation services,NAICS sector,324284.0,1074.0,18116867068.0,27642.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,103525.0,1300.0,6996624750.0,5518.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,579529.0,1216.0,36637000577.0,35298.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,82012.0,794.0,3384911464.0,5712.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,458788.0,487.0,11608737897.0,26325.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,81,Other services (except public administration),NAICS sector,130554.0,939.0,6373364042.0,29690.0,,False,2024_annual_by_area.zip
+2024,North Carolina,37000,Private sector,5,99,Unclassified,NAICS sector,396.0,1346.0,27745095.0,1346.0,,False,2024_annual_by_area.zip
+2025,North Carolina,37000,Total covered,0,10,All industries,Statewide benchmark,4941383.0,1376.0,353473744541.0,359089.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,10,All industries,Statewide benchmark,4219973.0,1388.0,304622632902.0,350632.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,11,"Agriculture, forestry, fishing and hunting",NAICS sector,,,,,N,True,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,21,"Mining, quarrying, and oil and gas extraction",NAICS sector,,,,,N,True,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,22,Utilities,NAICS sector,16095.0,2220.0,1858247819.0,786.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,23,Construction,NAICS sector,,,,,N,True,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,31-33,Manufacturing,NAICS sector,461466.0,1504.0,36087751340.0,11128.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,42,Wholesale trade,NAICS sector,208142.0,2002.0,21673368204.0,21864.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,44-45,Retail trade,NAICS sector,526628.0,777.0,21266735687.0,36621.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,48-49,Transportation and warehousing,NAICS sector,183284.0,1191.0,11354234827.0,9128.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,51,Information,NAICS sector,,,,,N,True,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,52,Finance and insurance,NAICS sector,234066.0,2659.0,32361190301.0,18691.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,53,Real estate and rental and leasing,NAICS sector,72824.0,1396.0,5286948791.0,17552.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,54,"Professional, scientific, and technical services",NAICS sector,334993.0,2254.0,39266133833.0,58112.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,55,Management of companies and enterprises,NAICS sector,83958.0,2816.0,12292007364.0,2456.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,56,Administrative and support and waste management and remediation services,NAICS sector,323694.0,1128.0,18985692061.0,25906.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,61,Educational services,NAICS sector,104599.0,1350.0,7341672725.0,5296.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,62,Health care and social assistance,NAICS sector,601703.0,1250.0,39117839126.0,35048.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,71,"Arts, entertainment, and recreation",NAICS sector,83242.0,829.0,3588534747.0,5536.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,72,Accommodation and food services,NAICS sector,459604.0,503.0,12025708222.0,25511.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,81,Other services (except public administration),NAICS sector,132211.0,976.0,6708968436.0,28066.0,,False,2025_annual_by_area.zip
+2025,North Carolina,37000,Private sector,5,99,Unclassified,NAICS sector,,,,,N,True,2025_annual_by_area.zip
