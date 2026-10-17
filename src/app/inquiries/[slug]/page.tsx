@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleShell } from "@/components/ArticleShell";
 import NCIndustryDashboard from "@/components/NCIndustryDashboard";
+import DogFoodNutrientChart from "@/components/DogFoodNutrientChart";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { PortableArticle } from "@/sanity/components/PortableArticle";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -86,6 +87,8 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
   const number=item.logNumber ? String(item.logNumber).padStart(3,"0") : "—";
   const eyebrow=item.categories?.[0] || "DATA + AI";
   const isNCIndustryInquiry = slug === "north-carolina-industry-growth";
+  const isDogFoodInquiry = slug === "dry-dog-food-nutrition-comparison";
+  const hasDashboard = isNCIndustryInquiry || isDogFoodInquiry;
 
   const opening = (
     <section id="opening">
@@ -97,10 +100,16 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
   return (
     <ArticleShell type="Inquiry" number={number} eyebrow={eyebrow} title={item.title}
       dek={item.subtitle || ""} date={displayDate(item.publishedAt)} visual="chart"
-      openingContent={isNCIndustryInquiry ? opening : undefined}
-      fullWidthContent={isNCIndustryInquiry ? <NCIndustryDashboard /> : undefined}
+      openingContent={hasDashboard ? opening : undefined}
+      fullWidthContent={
+        isNCIndustryInquiry
+          ? <NCIndustryDashboard />
+          : isDogFoodInquiry
+            ? <DogFoodNutrientChart />
+            : undefined
+      }
     >
-      {!isNCIndustryInquiry && opening}
+      {!hasDashboard && opening}
       <section id="middle">
         <p className="eyebrow">TOOLS + DATA</p>
         <h2>How the investigation was built.</h2>
