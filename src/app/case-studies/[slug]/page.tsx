@@ -1,60 +1,73 @@
-import {notFound} from "next/navigation";
-import {ArticleShell} from "@/components/ArticleShell";
-import {VisualPlaceholder} from "@/components/VisualPlaceholder";
-import {PortableArticle} from "@/sanity/components/PortableArticle";
-import {sanityFetch} from "@/sanity/lib/fetch";
-import {CASE_STUDY_QUERY} from "@/sanity/lib/queries";
-import type {PortableTextBlock} from "@portabletext/types";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "@portabletext/types";
+import { ArticleShell } from "@/components/ArticleShell";
+import { PortableArticle } from "@/sanity/components/PortableArticle";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { CASE_STUDY_QUERY } from "@/sanity/lib/queries";
 
-type Item={title:string;subtitle?:string|null;slug:string;publishedAt?:string|null;logNumber?:number|null;body?:PortableTextBlock[];businessChallenge?:string|null;intendedAudience?:string|null;decisionSupported?:string|null;dashboardUrl?:string|null;tools?:string[]|null;dataSources?:{name?:string;url?:string;notes?:string}[]|null;aiAssistance?:string|null;humanJudgment?:string|null;limitations?:string|null;categories?:string[]|null};
+type DataSource = {
+  name?: string | null;
+  url?: string | null;
+  notes?: string | null;
+};
 
-const date=(v?:string|null)=>v?new Intl.DateTimeFormat("en-US",{year:"numeric",month:"long",day:"numeric"}).format(new Date(v)):"DATE NOT SET";
-
-
-type CaseStudyMetadata = {
+type CaseStudy = {
   title: string;
   subtitle?: string | null;
   slug: string;
+  publishedAt?: string | null;
+  logNumber?: number | string | null;
+  body?: PortableTextBlock[] | null;
+  tools?: string[] | null;
+  dataSources?: DataSource[] | null;
+  aiAssistance?: string | null;
+  humanJudgment?: string | null;
+  limitations?: string | null;
+  categories?: string[] | null;
+  dashboardUrl?: string | null;
 };
 
-type CaseStudyPageProps = {
-  params: Promise<{ slug: string }>;
-};
+type PageProps = { params: Promise<{ slug: string }> };
 
+const NORTH_CAROLINA_DASHBOARD_URL =
+  "/inquiries/north-carolina-industry-growth";
+const NORTH_CAROLINA_CASE_STUDY_SLUG =
+  "building-nc-industry-growth-dashboard";
 
-export async function generateMetadata({
-  params,
-}: CaseStudyPageProps): Promise<Metadata> {
+function formattedDate(value?: string | null) {
+  if (!value) return "DATE NOT SET";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "DATE NOT SET";
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(parsed);
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-
-  const item = await sanityFetch<CaseStudyMetadata | null>({
+  const item = await sanityFetch<CaseStudy | null>({
     query: CASE_STUDY_QUERY,
     params: { slug },
   });
 
   if (!item) {
-    return {
-      title: "Case Study Not Found",
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
+    return { title: "Case Study Not Found", robots: { index: false, follow: false } };
   }
 
   const description =
     item.subtitle?.trim() ||
-    "A professional case study exploring business challenges through data visualization, analytics, and AI-assisted problem-solving.";
-
+    "A technical case study in data visualization, analytics, and AI-assisted development.";
   const url = `/case-studies/${encodeURIComponent(slug)}`;
 
   return {
     title: item.title,
     description,
-    alternates: {
-      canonical: url,
-    },
+    alternates: { canonical: url },
     openGraph: {
       type: "article",
       siteName: "Field Notes & Data",
@@ -73,21 +86,108 @@ export async function generateMetadata({
   };
 }
 
+export default async function CaseStudyPage({ params }: PageProps) {
+  const { slug } = await params;
+  const item = await sanityFetch<CaseStudy | null>({
+    query: CASE_STUDY_QUERY,
+    params: { slug },
+  });
+  if (!item) notFound();
 
-export default async function CaseStudyPage({params}:{params:Promise<{slug:string}>}){
- const {slug}=await params; const item=await sanityFetch<Item|null>({query:CASE_STUDY_QUERY,params:{slug}}); if(!item)notFound();
- const number=item.logNumber?String(item.logNumber).padStart(3,"0"):"—";
- return <ArticleShell type="Case Study" number={number} eyebrow={item.categories?.[0]||"AI + ANALYTICS"} title={item.title} dek={item.subtitle||""} date={date(item.publishedAt)} visual="dashboard">
-  <section id="opening"><p className="eyebrow">MISSION BRIEF</p><h2>Executive summary first.</h2><div className="brief-grid">
-   <div><b>Challenge</b><span>{item.businessChallenge||"Not specified"}</span></div><div><b>Audience</b><span>{item.intendedAudience||"Not specified"}</span></div>
-   <div><b>Decision</b><span>{item.decisionSupported||"Not specified"}</span></div><div><b>Tools</b><span>{item.tools?.join(" · ")||"Not specified"}</span></div>
-  </div></section>
-  <section><p className="eyebrow">THE DATA PRODUCT</p><h2>Give decision-makers the useful artifact early.</h2><VisualPlaceholder type="dashboard" label="Interactive dashboard or product embed"/>{item.dashboardUrl&&<p><a className="text-link" href={item.dashboardUrl}>Open data product →</a></p>}</section>
-  <section id="middle"><p className="eyebrow">TECHNICAL FIELD LOG</p><h2>Then let technical reviewers go deeper.</h2><PortableArticle value={item.body}/></section>
-  <section><p className="eyebrow">AI WORKFLOW</p><h2>Prompt → output → validation → revision.</h2><p>{item.aiAssistance||"Document how AI assisted the work here."}</p></section>
-  <section id="answer"><p className="eyebrow">HUMAN REVIEW</p><h2>What required judgment?</h2><p>{item.humanJudgment||"Document validation and professional judgment here."}</p></section>
-  <section id="methods" className="methods-box"><p className="eyebrow">REPRODUCIBILITY</p><h2>Dataset · Tools · Prompts · Code</h2>
-   {item.dataSources?.map((d,i)=><p key={i}><b>{d.name||"Data source"}</b>{d.notes?` — ${d.notes}`:""}</p>)}<p>{item.limitations||"Add limitations and reproducibility notes in Sanity."}</p>
-  </section>
- </ArticleShell>
+  const number = item.logNumber != null
+    ? String(item.logNumber).padStart(3, "0")
+    : "—";
+  const isNorthCarolinaCaseStudy = slug === NORTH_CAROLINA_CASE_STUDY_SLUG;
+  const dashboardUrl = isNorthCarolinaCaseStudy
+    ? NORTH_CAROLINA_DASHBOARD_URL
+    : item.dashboardUrl?.trim();
+
+  return (
+    <ArticleShell
+      type="Case Study"
+      number={number}
+      eyebrow={item.categories?.[0] || "AI + ANALYTICS"}
+      title={item.title}
+      dek={item.subtitle || ""}
+      date={formattedDate(item.publishedAt)}
+      visual="dashboard"
+    >
+      <section id="opening">
+        <p className="eyebrow">MISSION BRIEF</p>
+        <h2>From public data to an interactive analytics experience.</h2>
+        {isNorthCarolinaCaseStudy ? (
+          <p>
+            This project turns North Carolina industry employment and wage data
+            into three interactive visualizations, supported by transparent
+            methodology and an editorial research narrative. The case study
+            documents the application architecture, analytical decisions,
+            AI-assisted development, and production validation.
+          </p>
+        ) : (
+          <p>{item.subtitle || "Explore the approach, implementation, and validation behind this project."}</p>
+        )}
+        {item.tools?.length ? (
+          <p><strong>Tools:</strong> {item.tools.join(" · ")}</p>
+        ) : null}
+      </section>
+
+      {dashboardUrl ? (
+        <section>
+          <p className="eyebrow">THE DATA PRODUCT</p>
+          <h2>Explore the published interactive dashboard.</h2>
+          <p>
+            Open the companion inquiry to explore the visualizations and
+            analytical findings. The technical implementation is documented below.
+          </p>
+          <Link className="text-link" href={dashboardUrl}>
+            Open the interactive dashboard →
+          </Link>
+        </section>
+      ) : null}
+
+      <section id="middle">
+        <p className="eyebrow">TECHNICAL FIELD LOG</p>
+        <h2>Architecture, methodology, and implementation.</h2>
+        <PortableArticle value={item.body ?? undefined} />
+      </section>
+
+      {item.aiAssistance ? (
+        <section>
+          <p className="eyebrow">AI WORKFLOW</p>
+          <h2>How AI supported development.</h2>
+          <p style={{ whiteSpace: "pre-line" }}>{item.aiAssistance}</p>
+        </section>
+      ) : null}
+
+      {item.humanJudgment ? (
+        <section id="answer">
+          <p className="eyebrow">HUMAN REVIEW</p>
+          <h2>Analytical judgment and validation.</h2>
+          <p style={{ whiteSpace: "pre-line" }}>{item.humanJudgment}</p>
+        </section>
+      ) : null}
+
+      <section id="methods" className="methods-box">
+        <p className="eyebrow">REPRODUCIBILITY</p>
+        <h2>Data sources and limitations.</h2>
+        {item.dataSources?.map((source, index) => (
+          <p key={`${source.name ?? "source"}-${index}`}>
+            <strong>
+              {source.url ? (
+                <a className="text-link" href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.name || "Data source"}
+                </a>
+              ) : (
+                source.name || "Data source"
+              )}
+            </strong>
+            {source.notes ? ` — ${source.notes}` : ""}
+          </p>
+        ))}
+        {item.limitations ? (
+          <p style={{ whiteSpace: "pre-line" }}>{item.limitations}</p>
+        ) : null}
+      </section>
+    </ArticleShell>
+  );
 }
