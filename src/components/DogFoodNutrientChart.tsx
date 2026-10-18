@@ -25,9 +25,10 @@ const chewyPrices = [
   { name: "Purina Pro Plan", bagLb: 35, price: 74.48, url: "https://www.chewy.com/purina-pro-plan-high-protein-shredded/dp/52448" },
 ];
 
-const foods: { name: string; values: Record<NutrientKey, NutrientValue> }[] = [
+const foods: { name: string; moistureMax: number; values: Record<NutrientKey, NutrientValue> }[] = [
   {
     name: "Inukshuk 26/16",
+    moistureMax: 10,
     values: {
       protein: { value: 26, type: "Minimum", basis: "As-fed" },
       fat: { value: 16, type: "Minimum", basis: "As-fed" },
@@ -37,6 +38,7 @@ const foods: { name: string; values: Record<NutrientKey, NutrientValue> }[] = [
   },
   {
     name: "Eukanuba Adult Medium",
+    moistureMax: 10,
     values: {
       protein: { value: 24.5, type: "Minimum", basis: "As-fed" },
       fat: { value: 15, type: "Minimum", basis: "As-fed" },
@@ -46,6 +48,7 @@ const foods: { name: string; values: Record<NutrientKey, NutrientValue> }[] = [
   },
   {
     name: "Purina Pro Plan",
+    moistureMax: 12,
     values: {
       protein: { value: 26, type: "Minimum", basis: "As-fed" },
       fat: { value: 16, type: "Minimum", basis: "As-fed" },
@@ -54,6 +57,29 @@ const foods: { name: string; values: Record<NutrientKey, NutrientValue> }[] = [
     },
   },
 ];
+
+// A maximum moisture guarantee is not a measured moisture value.
+// Therefore, published as-fed minimums yield conservative DM lower bounds;
+// published as-fed maximums yield conservative DM upper bounds.
+// Reported dry-matter values are left unchanged.
+function dryMatterComparison(food: (typeof foods)[number], key: NutrientKey) {
+  const entry = food.values[key];
+  if (entry.basis === "Dry matter") {
+    return { value: entry.value, qualifier: "Reported DM", explanation: "Manufacturer-reported dry-matter concentration" };
+  }
+  if (entry.type === "Minimum") {
+    return {
+      value: entry.value,
+      qualifier: "DM lower bound",
+      explanation: `At least ${entry.value}% DM (conservative bound from as-fed minimum; moisture ≤${food.moistureMax}%)`,
+    };
+  }
+  return {
+    value: entry.value / (1 - food.moistureMax / 100),
+    qualifier: "DM upper bound",
+    explanation: `At most ${(entry.value / (1 - food.moistureMax / 100)).toFixed(2)}% DM (conservative bound from as-fed maximum; moisture ≤${food.moistureMax}%)`,
+  };
+}
 
 export default function DogFoodNutrientChart() {
   const [selected, setSelected] = useState<ChartKey>("protein");
@@ -74,8 +100,9 @@ export default function DogFoodNutrientChart() {
           const listing = chewyPrices[params.dataIndex];
           return `${food.name}<br/>$${(listing.price / listing.bagLb).toFixed(2)}/lb<br/>$${listing.price.toFixed(2)} for ${listing.bagLb} lb · Chewy`;
         }
+        const comparison = dryMatterComparison(food, selected);
         const entry = food.values[selected];
-        return `${food.name}<br/>${nutrients[selected].label}: ${entry.value}%<br/>${entry.type} · ${entry.basis}`;
+        return `${food.name}<br/>${nutrients[selected].label}: ${comparison.value.toFixed(2)}% DM<br/>${comparison.qualifier}<br/>Original: ${entry.value}% ${entry.type.toLowerCase()} (${entry.basis})<br/>${comparison.explanation}`;
       },
     },
     grid: { left: 175, right: 80, top: 40, bottom: 60 },
@@ -83,7 +110,7 @@ export default function DogFoodNutrientChart() {
       type: "value",
       // Keep the AAFCO upper limit visible even when all food bars are shorter.
       max: nutrient?.max == null ? undefined : Math.ceil(nutrient.max * 1.3 * 10) / 10,
-      name: isPrice ? "Chewy price per pound (USD)" : "Published percentage (%)",
+      name: isPrice ? "Chewy price per pound (USD)" : "Dry-matter value or conservative bound (%)",
       nameLocation: "middle",
       nameGap: 35,
       axisLabel: { formatter: isPrice ? "${value}" : "{value}%" },
@@ -99,9 +126,14 @@ export default function DogFoodNutrientChart() {
       {
         type: "bar",
         barMaxWidth: 30,
-        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4))) : foods.map((food) => food.values[selected as NutrientKey].value),
+        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4))) : foods.map((food) => dryMatterComparison(food, selected as NutrientKey).value),
         itemStyle: { color: "#29483A" },
-        label: { show: true, position: "right", formatter: (params: any) => isPrice ? `$${Number(params.value).toFixed(2)}` : `${params.value}%` },
+        label: { show: true, position: "right", formatter: (params: any) => {
+          if (isPrice) return `$${Number(params.value).toFixed(2)}`;
+          const comparison = dryMatterComparison(foods[params.dataIndex], selected as NutrientKey);
+          const symbol = comparison.qualifier === "DM lower bound" ? "≥" : comparison.qualifier === "DM upper bound" ? "≤" : "";
+          return `${symbol}${comparison.value.toFixed(2)}%`;
+        } },
         markLine: isPrice ? undefined : {
           symbol: "none",
           silent: true,
@@ -168,7 +200,7 @@ export default function DogFoodNutrientChart() {
       <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
         {isPrice
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
-          : "AAFCO reference lines use dry-matter percentages. Food bars show published figures, which may be as-fed guarantees or reported dry-matter concentrations. These values are not yet directly comparable and should not be interpreted as confirmed AAFCO compliance."}
+          : "All plotted nutrient values are on a dry-matter basis, but most are conservative bounds, not measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Eukanuba calcium and phosphorus are manufacturer-reported dry-matter values. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
       </p>
 
       <div style={{ overflowX: "auto", marginTop: 20 }}>
@@ -187,15 +219,18 @@ export default function DogFoodNutrientChart() {
           </table>
         ) : (
           <table style={{ width: "100%", minWidth: 540, borderCollapse: "collapse" }}>
-            <thead><tr><th style={{ textAlign: "left" }}>Food</th><th>Value</th><th>Reporting type</th><th>Basis</th></tr></thead>
+            <thead><tr><th style={{ textAlign: "left" }}>Food</th><th>DM comparison</th><th>Interpretation</th><th>Original published value</th><th>Moisture max</th></tr></thead>
             <tbody>{foods.map((food) => {
               const entry = food.values[selected];
+              const comparison = dryMatterComparison(food, selected);
+              const symbol = comparison.qualifier === "DM lower bound" ? "≥" : comparison.qualifier === "DM upper bound" ? "≤" : "";
               return (
                 <tr key={food.name}>
                   <td>{food.name}</td>
-                  <td style={{ textAlign: "center" }}>{entry.value}%</td>
-                  <td style={{ textAlign: "center" }}>{entry.type}</td>
-                  <td style={{ textAlign: "center" }}>{entry.basis}</td>
+                  <td style={{ textAlign: "center" }}>{symbol}{comparison.value.toFixed(2)}%</td>
+                  <td style={{ textAlign: "center" }}>{comparison.qualifier}</td>
+                  <td style={{ textAlign: "center" }}>{entry.value}% {entry.type.toLowerCase()} ({entry.basis})</td>
+                  <td style={{ textAlign: "center" }}>{food.moistureMax}%</td>
                 </tr>
               );
             })}</tbody>
