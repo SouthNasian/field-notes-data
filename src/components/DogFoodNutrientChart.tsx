@@ -25,7 +25,7 @@ const chewyPrices = [
   { name: "Purina Pro Plan", bagLb: 35, price: 74.48, url: "https://www.chewy.com/purina-pro-plan-high-protein-shredded/dp/52448" },
 ];
 
-const foods: { name: string; moistureMax: number; values: Record<NutrientKey, NutrientValue> }[] = [
+const foods: { name: string; moistureMax: number; values: Partial<Record<NutrientKey, NutrientValue>> }[] = [
   {
     name: "Inukshuk 26/16",
     moistureMax: 10,
@@ -64,6 +64,7 @@ const foods: { name: string; moistureMax: number; values: Record<NutrientKey, Nu
 // Reported dry-matter values are left unchanged.
 function dryMatterComparison(food: (typeof foods)[number], key: NutrientKey) {
   const entry = food.values[key];
+  if (!entry) return null;
   if (entry.basis === "Dry matter") {
     return { value: entry.value, qualifier: "Reported DM", explanation: "Manufacturer-reported dry-matter concentration" };
   }
@@ -80,6 +81,11 @@ function dryMatterComparison(food: (typeof foods)[number], key: NutrientKey) {
     explanation: `At most ${(entry.value / (1 - food.moistureMax / 100)).toFixed(2)}% DM (conservative bound from as-fed maximum; moisture ≤${food.moistureMax}%)`,
   };
 }
+
+// Show a nutrient only when at least one food has a documented value.
+const availableNutrients = (Object.keys(nutrients) as NutrientKey[]).filter((key) =>
+  foods.some((food) => food.values[key] !== undefined)
+);
 
 export default function DogFoodNutrientChart() {
   const [selected, setSelected] = useState<ChartKey>("protein");
@@ -102,6 +108,7 @@ export default function DogFoodNutrientChart() {
         }
         const comparison = dryMatterComparison(food, selected);
         const entry = food.values[selected];
+        if (!comparison || !entry) return `${food.name}<br/>${nutrients[selected].label}: Data not available`;
         return `${food.name}<br/>${nutrients[selected].label}: ${comparison.value.toFixed(2)}% DM<br/>${comparison.qualifier}<br/>Original: ${entry.value}% ${entry.type.toLowerCase()} (${entry.basis})<br/>${comparison.explanation}`;
       },
     },
@@ -126,11 +133,12 @@ export default function DogFoodNutrientChart() {
       {
         type: "bar",
         barMaxWidth: 30,
-        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4))) : foods.map((food) => dryMatterComparison(food, selected as NutrientKey).value),
+        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4))) : foods.map((food) => dryMatterComparison(food, selected as NutrientKey)?.value ?? null),
         itemStyle: { color: "#29483A" },
         label: { show: true, position: "right", formatter: (params: any) => {
           if (isPrice) return `$${Number(params.value).toFixed(2)}`;
           const comparison = dryMatterComparison(foods[params.dataIndex], selected as NutrientKey);
+          if (!comparison) return "N/A";
           const symbol = comparison.qualifier === "DM lower bound" ? "≥" : comparison.qualifier === "DM upper bound" ? "≤" : "";
           return `${symbol}${comparison.value.toFixed(2)}%`;
         } },
@@ -185,7 +193,7 @@ export default function DogFoodNutrientChart() {
           border: "1px solid var(--line)",
         }}
       >
-        {(Object.keys(nutrients) as NutrientKey[]).map((key) => (
+        {availableNutrients.map((key) => (
           <option key={key} value={key}>{nutrients[key].label}</option>
         ))}
         <option value="price">Price per Pound (Chewy)</option>
@@ -202,6 +210,31 @@ export default function DogFoodNutrientChart() {
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
           : "All plotted nutrient values are on a dry-matter basis, but most are conservative bounds, not measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Eukanuba calcium and phosphorus are manufacturer-reported dry-matter values. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
       </p>
+
+      <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
+        <h3 style={{ marginTop: 0, marginBottom: 8 }}>Nutrient data coverage</h3>
+        <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
+          Coverage of the {Object.keys(nutrients).length} nutrients currently tracked in this comparison.
+          This is not coverage of the complete AAFCO nutrient profile, and availability does not establish nutritional adequacy.
+        </p>
+        {foods.map((food) => {
+          const count = (Object.keys(nutrients) as NutrientKey[]).filter((key) => food.values[key] !== undefined).length;
+          const total = Object.keys(nutrients).length;
+          return (
+            <div key={food.name} style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: "0.9rem" }}>
+                <span>{food.name}</span><span>{count} of {total} documented</span>
+              </div>
+              <div aria-label={`${food.name}: ${count} of ${total} tracked nutrients documented`} style={{ height: 8, marginTop: 5, background: "var(--line)", borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ width: `${(count / total) * 100}%`, height: "100%", background: "#29483A" }} />
+              </div>
+            </div>
+          );
+        })}
+        <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6, marginBottom: 0 }}>
+          Other AAFCO nutrients are not yet tracked here. Missing manufacturer values will be shown as “Data not available” when additional nutrients are added.
+        </p>
+      </div>
 
       <div style={{ overflowX: "auto", marginTop: 20 }}>
         {isPrice ? (
@@ -223,6 +256,9 @@ export default function DogFoodNutrientChart() {
             <tbody>{foods.map((food) => {
               const entry = food.values[selected];
               const comparison = dryMatterComparison(food, selected);
+              if (!comparison || !entry) return (
+                <tr key={food.name}><td>{food.name}</td><td colSpan={4} style={{ textAlign: "center" }}>Data not available</td></tr>
+              );
               const symbol = comparison.qualifier === "DM lower bound" ? "≥" : comparison.qualifier === "DM upper bound" ? "≤" : "";
               return (
                 <tr key={food.name}>
