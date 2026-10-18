@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { EChartsOption } from "echarts";
 import EChartsChart from "./EChartsChart";
+import { dogFoods } from "../data/dogFoodNutrition";
 import {
   aafcoAdultMaintenance,
   type AafcoNutrient,
@@ -10,11 +11,6 @@ import {
 
 type NutrientKey = "protein" | "fat" | "calcium" | "phosphorus";
 type ChartKey = NutrientKey | "price";
-type NutrientValue = {
-  value: number;
-  type: "Minimum" | "Maximum" | "Reported";
-  basis: "As-fed" | "Dry matter";
-};
 
 const nutrientKeys: NutrientKey[] = [
   "protein",
@@ -44,38 +40,7 @@ const chewyPrices = [
   { name: "Purina Pro Plan", bagLb: 35, price: 74.48, url: "https://www.chewy.com/purina-pro-plan-high-protein-shredded/dp/52448" },
 ];
 
-const foods: { name: string; moistureMax: number; values: Partial<Record<NutrientKey, NutrientValue>> }[] = [
-  {
-    name: "Inukshuk 26/16",
-    moistureMax: 10,
-    values: {
-      protein: { value: 26, type: "Minimum", basis: "As-fed" },
-      fat: { value: 16, type: "Minimum", basis: "As-fed" },
-      calcium: { value: 1.3, type: "Maximum", basis: "As-fed" },
-      phosphorus: { value: 1.1, type: "Maximum", basis: "As-fed" },
-    },
-  },
-  {
-    name: "Eukanuba Adult Medium",
-    moistureMax: 10,
-    values: {
-      protein: { value: 24.5, type: "Minimum", basis: "As-fed" },
-      fat: { value: 15, type: "Minimum", basis: "As-fed" },
-      calcium: { value: 1.31, type: "Reported", basis: "Dry matter" },
-      phosphorus: { value: 1.1, type: "Reported", basis: "Dry matter" },
-    },
-  },
-  {
-    name: "Purina Pro Plan",
-    moistureMax: 12,
-    values: {
-      protein: { value: 26, type: "Minimum", basis: "As-fed" },
-      fat: { value: 16, type: "Minimum", basis: "As-fed" },
-      calcium: { value: 1, type: "Minimum", basis: "As-fed" },
-      phosphorus: { value: 0.8, type: "Minimum", basis: "As-fed" },
-    },
-  },
-];
+const foods = dogFoods;
 
 // A maximum moisture guarantee is not a measured moisture value.
 // Therefore, published as-fed minimums yield conservative DM lower bounds;
