@@ -3,6 +3,10 @@
 import { useMemo, useState } from "react";
 import type { EChartsOption } from "echarts";
 import EChartsChart from "./EChartsChart";
+import {
+  aafcoAdultMaintenance,
+  type AafcoNutrient,
+} from "../data/aafcoAdultMaintenance";
 
 type NutrientKey = "protein" | "fat" | "calcium" | "phosphorus";
 type ChartKey = NutrientKey | "price";
@@ -12,12 +16,27 @@ type NutrientValue = {
   basis: "As-fed" | "Dry matter";
 };
 
-const nutrients: Record<NutrientKey, { label: string; min: number; max: number | null }> = {
-  protein: { label: "Protein", min: 18, max: null },
-  fat: { label: "Fat", min: 5.5, max: null },
-  calcium: { label: "Calcium", min: 0.5, max: 2.5 },
-  phosphorus: { label: "Phosphorus", min: 0.4, max: 1.6 },
-};
+const nutrientKeys: NutrientKey[] = [
+  "protein",
+  "fat",
+  "calcium",
+  "phosphorus",
+];
+
+const nutrients: Record<NutrientKey, AafcoNutrient> =
+  Object.fromEntries(
+    nutrientKeys.map((key) => {
+      const nutrient = aafcoAdultMaintenance.find(
+        (entry) => entry.id === key
+      );
+
+      if (!nutrient) {
+        throw new Error(`Missing AAFCO nutrient: ${key}`);
+      }
+
+      return [key, nutrient];
+    })
+  ) as Record<NutrientKey, AafcoNutrient>;
 
 const chewyPrices = [
   { name: "Inukshuk 26/16", bagLb: 33, price: 60.64, url: "https://www.chewy.com/inukshuk-professional-dry-dog-food/dp/149200" },
@@ -146,12 +165,21 @@ export default function DogFoodNutrientChart() {
           symbol: "none",
           silent: true,
           data: [
-            {
-              name: "AAFCO minimum",
-              xAxis: nutrient!.min,
-              lineStyle: { color: "#B88938", type: "dashed", width: 2 },
-              label: { formatter: "AAFCO min", position: "insideEndBottom" },
-            },
+            ...(nutrient!.min === null
+  ? []
+  : [{
+      name: "AAFCO minimum",
+      xAxis: nutrient!.min!,
+      lineStyle: {
+        color: "#B88938",
+        type: "dashed" as const,
+        width: 2,
+      },
+      label: {
+        formatter: "AAFCO min",
+        position: "insideEndBottom" as const,
+      },
+    }]),
             ...(nutrient!.max === null
               ? []
               : [{
