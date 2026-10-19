@@ -220,16 +220,49 @@ export default function DogFoodNutrientChart() {
           Coverage of the {Object.keys(nutrients).length} nutrients currently tracked in this comparison.
           This is not coverage of the complete AAFCO nutrient profile, and availability does not establish nutritional adequacy.
         </p>
+        <div aria-label="Nutrient evidence categories" style={{ display: "flex", flexWrap: "wrap", gap: "8px 18px", margin: "14px 0", fontSize: "0.85rem" }}>
+          {[
+            { label: "Manufacturer-reported", color: "#29483A" },
+            { label: "Guaranteed-analysis bound", color: "#B88938" },
+            { label: "Data unavailable", color: "#D9D9D0" },
+          ].map((item) => (
+            <span key={item.label} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <span aria-hidden="true" style={{ width: 12, height: 12, background: item.color, display: "inline-block" }} />
+              {item.label}
+            </span>
+          ))}
+        </div>
         {foods.map((food) => {
-          const count = (Object.keys(nutrients) as NutrientKey[]).filter((key) => food.values[key] !== undefined).length;
-          const total = Object.keys(nutrients).length;
+          const total = nutrientKeys.length;
+          const reported = nutrientKeys.filter((key) => food.values[key]?.type === "Reported").length;
+          const bounds = nutrientKeys.filter((key) => {
+            const type = food.values[key]?.type;
+            return type === "Minimum" || type === "Maximum";
+          }).length;
+          const unavailable = total - reported - bounds;
+          const segments = [
+            { label: "manufacturer-reported", count: reported, color: "#29483A" },
+            { label: "guaranteed-analysis bounds", count: bounds, color: "#B88938" },
+            { label: "unavailable", count: unavailable, color: "#D9D9D0" },
+          ];
           return (
-            <div key={food.name} style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: "0.9rem" }}>
-                <span>{food.name}</span><span>{count} of {total} documented</span>
+            <div key={food.name} style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", fontSize: "0.9rem" }}>
+                <span>{food.name}</span>
+                <span>{reported} reported · {bounds} bounds · {unavailable} unavailable</span>
               </div>
-              <div aria-label={`${food.name}: ${count} of ${total} tracked nutrients documented`} style={{ height: 8, marginTop: 5, background: "var(--line)", borderRadius: 4, overflow: "hidden" }}>
-                <div style={{ width: `${(count / total) * 100}%`, height: "100%", background: "#29483A" }} />
+              <div
+                role="img"
+                aria-label={`${food.name}: ${reported} manufacturer-reported, ${bounds} guaranteed-analysis bounds, ${unavailable} unavailable, out of ${total} tracked nutrients`}
+                style={{ display: "flex", height: 12, marginTop: 7, borderRadius: 4, overflow: "hidden", background: "#D9D9D0" }}
+              >
+                {segments.filter((segment) => segment.count > 0).map((segment) => (
+                  <div
+                    key={segment.label}
+                    title={`${segment.count} ${segment.label}`}
+                    style={{ width: `${(segment.count / total) * 100}%`, background: segment.color }}
+                  />
+                ))}
               </div>
             </div>
           );
