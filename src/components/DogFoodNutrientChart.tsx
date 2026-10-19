@@ -9,7 +9,7 @@ import {
   type AafcoNutrient,
 } from "../data/aafcoAdultMaintenance";
 
-type NutrientKey = "protein" | "fat" | "calcium" | "phosphorus";
+type NutrientKey = "protein" | "fat" | "calcium" | "phosphorus" | "fiber" | "omega3" | "omega6";
 type ChartKey = NutrientKey | "price";
 
 const nutrientKeys: NutrientKey[] = [
@@ -17,22 +17,32 @@ const nutrientKeys: NutrientKey[] = [
   "fat",
   "calcium",
   "phosphorus",
+  "fiber",
+  "omega3",
+  "omega6",
 ];
 
-const nutrients: Record<NutrientKey, AafcoNutrient> =
-  Object.fromEntries(
-    nutrientKeys.map((key) => {
-      const nutrient = aafcoAdultMaintenance.find(
-        (entry) => entry.id === key
-      );
+const additionalLabels: Partial<Record<NutrientKey, string>> = {
+  fiber: "Crude fiber",
+  omega3: "Omega-3 fatty acids",
+  omega6: "Omega-6 fatty acids",
+};
 
-      if (!nutrient) {
-        throw new Error(`Missing AAFCO nutrient: ${key}`);
-      }
-
-      return [key, nutrient];
-    })
-  ) as Record<NutrientKey, AafcoNutrient>;
+// Fiber and total omega-3/omega-6 have no matching concentration thresholds
+// in the AAFCO adult-maintenance dataset; do not invent reference lines.
+const nutrients: Record<NutrientKey, AafcoNutrient> = Object.fromEntries(
+  nutrientKeys.map((key) => {
+    const reference = aafcoAdultMaintenance.find((entry) => entry.id === key);
+    return [key, reference ?? {
+      id: key,
+      label: additionalLabels[key] ?? key,
+      category: "Vitamins & other" as const,
+      unit: "%" as const,
+      min: null,
+      max: null,
+    }];
+  })
+) as Record<NutrientKey, AafcoNutrient>;
 
 const chewyPrices = [
   { name: "Inukshuk 26/16", bagLb: 33, price: 60.64, url: "https://www.chewy.com/inukshuk-professional-dry-dog-food/dp/149200" },
@@ -201,7 +211,7 @@ export default function DogFoodNutrientChart() {
       <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
         {isPrice
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
-          : "All plotted nutrient values are on a dry-matter basis, but most are conservative bounds, not measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Eukanuba calcium and phosphorus are manufacturer-reported dry-matter values. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
+          : "All plotted nutrient values are on a dry-matter basis, but most are conservative bounds, not measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Eukanuba values are manufacturer-reported dry-matter concentrations (October 19, 2026); the other foods mostly have guaranteed-analysis bounds. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
       </p>
 
       <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
@@ -227,6 +237,31 @@ export default function DogFoodNutrientChart() {
         <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6, marginBottom: 0 }}>
           Other AAFCO nutrients are not yet tracked here. Missing manufacturer values will be shown as “Data not available” when additional nutrients are added.
         </p>
+      </div>
+
+      <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
+        <h3 style={{ marginTop: 0, marginBottom: 8 }}>Additional Eukanuba manufacturer information</h3>
+        {foods.filter((food) => food.additionalMetrics).map((food) => {
+          const metrics = food.additionalMetrics!;
+          return (
+            <div key={food.name} style={{ fontSize: "0.9rem", lineHeight: 1.7 }}>
+              <p style={{ marginTop: 0 }}><strong>{food.name}</strong> — {food.manufacturerDataSource ?? "Manufacturer-provided information"}</p>
+              <p>Vitamin D3: {metrics.vitaminD3 ? `${metrics.vitaminD3.value.toLocaleString()} ${metrics.vitaminD3.unit} (basis not specified)` : "Data not available"}</p>
+              <p>Metabolizable energy: {metrics.metabolizableEnergy ? `${metrics.metabolizableEnergy.kcalPerKg.toLocaleString()} kcal/kg; ${metrics.metabolizableEnergy.kcalPerCup} kcal/cup` : "Data not available"}</p>
+              <p>Calcium-to-phosphorus ratio: {metrics.calciumPhosphorusRatio ?? "Data not available"}</p>
+              <p>Ash: {metrics.ash === null ? "Manufacturer could not provide a value" : "Data not available"}</p>
+              {food.guaranteedAnalysis && (
+                <p>
+                  Original label guarantees: {Object.entries(food.guaranteedAnalysis)
+                    .filter((entry): entry is [string, NonNullable<typeof entry[1]>] => entry[1] !== undefined)
+                    .map(([key, value]) => `${key} ${value.value}% ${value.type.toLowerCase()} (${value.basis})`)
+                    .join("; ")}. These are retained separately from the new dry-matter measurements.
+                </p>
+              )}
+            </div>
+          );
+        })}
+        <p style={{ color: "var(--slate)", fontSize: "0.85rem", marginBottom: 0 }}>Vitamin D3 cannot be compared against dry-matter AAFCO thresholds until its reporting basis is confirmed.</p>
       </div>
 
       <div style={{ overflowX: "auto", marginTop: 20 }}>
