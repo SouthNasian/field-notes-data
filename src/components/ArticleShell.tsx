@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ReactNode } from "react";
 import { VisualPlaceholder } from "./VisualPlaceholder";
 
@@ -11,6 +12,8 @@ type ArticleShellProps = {
   date: string;
   visual: string;
   children: ReactNode;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
   /** Optional opening narrative displayed before a full-width dashboard. */
   openingContent?: ReactNode;
   /** Optional content displayed at the full shell width between narrative sections. */
@@ -19,7 +22,7 @@ type ArticleShellProps = {
 
 export function ArticleShell({
   type, number, eyebrow, title, dek, date, visual,
-  children, openingContent, fullWidthContent,
+  children, openingContent, fullWidthContent, heroImageUrl, heroImageAlt,
 }: ArticleShellProps) {
   const hasSplitLayout = openingContent != null && fullWidthContent != null;
 
@@ -30,7 +33,20 @@ export function ArticleShell({
         <h1>{title}</h1>
         <p className="article-dek">{dek}</p>
         <p className="article-meta">{date} · FIELD NOTES &amp; DATA</p>
-        <VisualPlaceholder type={visual} label={`${type} hero visual`} />
+        {heroImageUrl ? (
+          <div className="visual" style={{ position: "relative" }}>
+            <Image
+              src={heroImageUrl}
+              alt={heroImageAlt || `${title} hero image`}
+              fill
+              unoptimized
+              sizes="(max-width: 650px) 100vw, (max-width: 900px) 95vw, 1200px"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+        ) : (
+          <VisualPlaceholder type={visual} label={`${type} hero visual`} />
+        )}
       </section>
 
       {hasSplitLayout ? (

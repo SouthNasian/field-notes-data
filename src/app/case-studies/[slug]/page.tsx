@@ -5,6 +5,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { ArticleShell } from "@/components/ArticleShell";
 import { PortableArticle } from "@/sanity/components/PortableArticle";
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { urlFor } from "@/sanity/lib/image";
 import { CASE_STUDY_QUERY } from "@/sanity/lib/queries";
 
 type DataSource = {
@@ -19,6 +20,10 @@ type CaseStudy = {
   slug: string;
   publishedAt?: string | null;
   logNumber?: number | string | null;
+  heroImage?: {
+    asset?: { _ref?: string | null } | null;
+    alt?: string | null;
+  } | null;
   body?: PortableTextBlock[] | null;
   tools?: string[] | null;
   dataSources?: DataSource[] | null;
@@ -101,6 +106,10 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const dashboardUrl = isNorthCarolinaCaseStudy
     ? NORTH_CAROLINA_DASHBOARD_URL
     : item.dashboardUrl?.trim();
+  // Preserve the existing decorative hero for the North Carolina case study.
+  const heroImageUrl = !isNorthCarolinaCaseStudy && item.heroImage?.asset?._ref
+    ? urlFor(item.heroImage).width(1800).auto("format").url()
+    : undefined;
 
   return (
     <ArticleShell
@@ -111,6 +120,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
       dek={item.subtitle || ""}
       date={formattedDate(item.publishedAt)}
       visual="dashboard"
+      heroImageUrl={heroImageUrl}
+      heroImageAlt={item.heroImage?.alt || undefined}
     >
       <section id="opening">
         <p className="eyebrow">MISSION BRIEF</p>
