@@ -92,7 +92,7 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
   const isNCIndustryInquiry = slug === "north-carolina-industry-growth";
   const isDogFoodInquiry = slug === "dry-dog-food-nutrition-comparison";
   const hasDashboard = isNCIndustryInquiry || isDogFoodInquiry;
-  const heroImageUrl = isNCIndustryInquiry && item.heroImage?.asset?._ref
+  const heroImageUrl = (isNCIndustryInquiry || isDogFoodInquiry) && item.heroImage?.asset?._ref
     ? urlFor(item.heroImage).width(1800).auto("format").url()
     : undefined;
 
