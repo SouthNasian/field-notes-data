@@ -62,7 +62,7 @@ function dryMatterComparison(food: (typeof foods)[number], key: NutrientKey) {
   const entry = food.values[key];
   if (!entry) return null;
   if (entry.basis === "Dry matter") {
-    return { value: entry.value, qualifier: "Reported DM", explanation: "Manufacturer-reported dry-matter concentration" };
+    return { value: entry.value, qualifier: "Reported DM", explanation: "Reported average dry-matter concentration (see product source below)" };
   }
   if (entry.type === "Minimum") {
     return {
@@ -111,7 +111,7 @@ export default function DogFoodNutrientChart() {
         }
         if (selected === "calories") {
           const kcal = food.additionalMetrics?.metabolizableEnergy?.kcalPerCup;
-          return `${food.name}<br/>${kcal == null ? "Calories per cup: Data not available" : `Calories per cup: ${kcal} kcal (manufacturer-reported)`}`;
+          return `${food.name}<br/>${kcal == null ? "Calories per cup: Data not available" : `Calories per cup: ${kcal} kcal (see source below)`}`;
         }
         const comparison = dryMatterComparison(food, selected as NutrientKey);
         const entry = food.values[selected];
@@ -246,10 +246,10 @@ export default function DogFoodNutrientChart() {
 
       <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
         {isCalories
-          ? "Calories per cup are manufacturer-reported metabolizable energy per measuring cup, not dry-matter nutrient percentages. Purina's value is unavailable pending its manufacturer response. Cup sizes and kibble densities vary; kcal/cup is not the same as kcal/g."
+          ? "Calories per cup are reported metabolizable energy per measuring cup, not dry-matter nutrient percentages. Purina's 387 kcal/cup comes from a nutritional information screenshot for the believed matching Chicken & Rice formula; the exact formula match has not been independently confirmed. Cup sizes and kibble densities vary; kcal/cup is not the same as kcal/g."
           : isPrice
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
-          : "All plotted nutrient values are on a dry-matter basis. Inukshuk and Eukanuba have manufacturer-reported dry-matter concentrations (October 20 and October 19, 2026, respectively); Purina currently has guaranteed-analysis bounds rather than measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
+          : "All plotted nutrient values are on a dry-matter basis. Inukshuk and Eukanuba use manufacturer-reported concentrations (October 20 and October 19, 2026); Purina uses average dry-matter values from a nutritional information screenshot for the believed matching Chicken & Rice formula (exact match not independently confirmed). Original label guarantees are preserved separately. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO thresholds and clinical recommendations are distinct; neither alone establishes complete nutritional adequacy."}
       </p>
 
       <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
@@ -260,7 +260,7 @@ export default function DogFoodNutrientChart() {
         </p>
         <div aria-label="Nutrient evidence categories" style={{ display: "flex", flexWrap: "wrap", gap: "8px 18px", margin: "14px 0", fontSize: "0.85rem" }}>
           {[
-            { label: "Manufacturer-reported", color: "#29483A" },
+            { label: "Reported nutrient value", color: "#29483A" },
             { label: "Guaranteed-analysis bound", color: "#B88938" },
             { label: "Data unavailable", color: "#D9D9D0" },
           ].map((item) => (
@@ -279,7 +279,7 @@ export default function DogFoodNutrientChart() {
           }).length;
           const unavailable = total - reported - bounds;
           const segments = [
-            { label: "manufacturer-reported", count: reported, color: "#29483A" },
+            { label: "reported", count: reported, color: "#29483A" },
             { label: "guaranteed-analysis bounds", count: bounds, color: "#B88938" },
             { label: "unavailable", count: unavailable, color: "#D9D9D0" },
           ];
@@ -291,7 +291,7 @@ export default function DogFoodNutrientChart() {
               </div>
               <div
                 role="img"
-                aria-label={`${food.name}: ${reported} manufacturer-reported, ${bounds} guaranteed-analysis bounds, ${unavailable} unavailable, out of ${total} tracked nutrients`}
+                aria-label={`${food.name}: ${reported} reported, ${bounds} guaranteed-analysis bounds, ${unavailable} unavailable, out of ${total} tracked nutrients`}
                 style={{ display: "flex", height: 12, marginTop: 7, borderRadius: 4, overflow: "hidden", background: "#D9D9D0" }}
               >
                 {segments.filter((segment) => segment.count > 0).map((segment) => (
@@ -322,7 +322,7 @@ export default function DogFoodNutrientChart() {
               <p>Calcium-to-phosphorus ratio: {metrics.calciumPhosphorusRatio ?? "Data not available"}</p>
               {metrics.ash === null && <p>Ash: Manufacturer could not provide a value</p>}
               {!!metrics.minerals?.length && (
-                <p>Other minerals (manufacturer-reported dry matter): {metrics.minerals.map((item) => `${item.label} ${item.value.toLocaleString("en-US")} ${item.unit}`).join("; ")}</p>
+                <p>Other minerals (reported dry matter; see product source): {metrics.minerals.map((item) => `${item.label} ${item.value.toLocaleString("en-US")} ${item.unit}`).join("; ")}</p>
               )}
               {!!metrics.vitamins?.length && (
                 <p>Other vitamins (manufacturer-reported dry matter): {metrics.vitamins.map((item) => `${item.label} ${item.value.toLocaleString("en-US")} ${item.unit}`).join("; ")}</p>
@@ -352,7 +352,7 @@ export default function DogFoodNutrientChart() {
               <tr key={food.name}>
                 <td>{food.name}</td>
                 <td style={{ textAlign: "center" }}>{food.additionalMetrics?.metabolizableEnergy?.kcalPerCup == null ? "Data not available" : `${food.additionalMetrics.metabolizableEnergy.kcalPerCup} kcal`}</td>
-                <td style={{ textAlign: "center" }}>{food.additionalMetrics?.metabolizableEnergy ? (food.manufacturerDataSource ?? "Manufacturer") : "Awaiting manufacturer response"}</td>
+                <td style={{ textAlign: "center" }}>{food.additionalMetrics?.metabolizableEnergy ? (food.manufacturerDataSource ?? "Reported product information") : "Data not available"}</td>
               </tr>
             ))}</tbody>
           </table>

@@ -92,10 +92,28 @@ export const dogFoods: DogFoodNutrition[] = [
     name: "Purina Pro Plan",
     moistureMax: 12,
     values: {
+      protein: { value: 29.90, type: "Reported", basis: "Dry matter" },
+      fat: { value: 19.00, type: "Reported", basis: "Dry matter" },
+      fiber: { value: 1.60, type: "Reported", basis: "Dry matter" },
+      calcium: { value: 1.51, type: "Reported", basis: "Dry matter" },
+      phosphorus: { value: 1.12, type: "Reported", basis: "Dry matter" },
+    },
+    guaranteedAnalysis: {
       protein: { value: 26, type: "Minimum", basis: "As-fed" },
       fat: { value: 16, type: "Minimum", basis: "As-fed" },
       calcium: { value: 1, type: "Minimum", basis: "As-fed" },
       phosphorus: { value: 0.8, type: "Minimum", basis: "As-fed" },
     },
+    additionalMetrics: {
+      metabolizableEnergy: { kcalPerKg: 4038, kcalPerCup: 387 },
+      calciumPhosphorusRatio: "1.35:1 (calculated from rounded dry-matter values)",
+      minerals: [
+        { label: "Potassium", value: 0.80, unit: "%" },
+        { label: "Sodium", value: 0.45, unit: "%" },
+        { label: "Chloride", value: 0.81, unit: "%" },
+        { label: "Magnesium", value: 0.14, unit: "%" },
+      ],
+    },
+    manufacturerDataSource: "Purina Pro Plan Complete Essentials Adult Shredded Blend Chicken & Rice nutritional information screenshot (formula match believed, not independently confirmed; average values)",
   },
 ];
