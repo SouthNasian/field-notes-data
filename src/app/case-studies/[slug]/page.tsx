@@ -106,8 +106,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const dashboardUrl = isNorthCarolinaCaseStudy
     ? NORTH_CAROLINA_DASHBOARD_URL
     : item.dashboardUrl?.trim();
-  // Preserve the existing decorative hero for the North Carolina case study.
-  const heroImageUrl = !isNorthCarolinaCaseStudy && item.heroImage?.asset?._ref
+  // Display the published Sanity hero image when available.
+  const heroImageUrl = item.heroImage?.asset?._ref
     ? urlFor(item.heroImage).width(1800).auto("format").url()
     : undefined;
 
