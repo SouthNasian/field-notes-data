@@ -211,7 +211,7 @@ export default function DogFoodNutrientChart() {
       <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
         {isPrice
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
-          : "All plotted nutrient values are on a dry-matter basis, but most are conservative bounds, not measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Eukanuba values are manufacturer-reported dry-matter concentrations (October 19, 2026); the other foods mostly have guaranteed-analysis bounds. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
+          : "All plotted nutrient values are on a dry-matter basis. Inukshuk and Eukanuba have manufacturer-reported dry-matter concentrations (October 20 and October 19, 2026, respectively); Purina currently has guaranteed-analysis bounds rather than measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
       </p>
 
       <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
@@ -273,16 +273,25 @@ export default function DogFoodNutrientChart() {
       </div>
 
       <div style={{ marginTop: 22, padding: "16px", border: "1px solid var(--line)" }}>
-        <h3 style={{ marginTop: 0, marginBottom: 8 }}>Additional Eukanuba manufacturer information</h3>
+        <h3 style={{ marginTop: 0, marginBottom: 8 }}>Additional manufacturer nutrition information</h3>
         {foods.filter((food) => food.additionalMetrics).map((food) => {
           const metrics = food.additionalMetrics!;
           return (
             <div key={food.name} style={{ fontSize: "0.9rem", lineHeight: 1.7 }}>
               <p style={{ marginTop: 0 }}><strong>{food.name}</strong> — {food.manufacturerDataSource ?? "Manufacturer-provided information"}</p>
-              <p>Vitamin D3: {metrics.vitaminD3 ? `${metrics.vitaminD3.value.toLocaleString()} ${metrics.vitaminD3.unit} (basis not specified)` : "Data not available"}</p>
+              <p>Vitamin D3: {metrics.vitaminD3 ? `${metrics.vitaminD3.value.toLocaleString()} ${metrics.vitaminD3.unit} (${metrics.vitaminD3.basis === "Dry matter" ? "dry matter" : "basis not specified"})` : "Data not available"}</p>
               <p>Metabolizable energy: {metrics.metabolizableEnergy ? `${metrics.metabolizableEnergy.kcalPerKg.toLocaleString()} kcal/kg; ${metrics.metabolizableEnergy.kcalPerCup} kcal/cup` : "Data not available"}</p>
               <p>Calcium-to-phosphorus ratio: {metrics.calciumPhosphorusRatio ?? "Data not available"}</p>
-              <p>Ash: {metrics.ash === null ? "Manufacturer could not provide a value" : "Data not available"}</p>
+              {metrics.ash === null && <p>Ash: Manufacturer could not provide a value</p>}
+              {!!metrics.minerals?.length && (
+                <p>Other minerals (manufacturer-reported dry matter): {metrics.minerals.map((item) => `${item.label} ${item.value.toLocaleString("en-US")} ${item.unit}`).join("; ")}</p>
+              )}
+              {!!metrics.vitamins?.length && (
+                <p>Other vitamins (manufacturer-reported dry matter): {metrics.vitamins.map((item) => `${item.label} ${item.value.toLocaleString("en-US")} ${item.unit}`).join("; ")}</p>
+              )}
+              {metrics.aafcoStatement && (
+                <p>Manufacturer-provided AAFCO suitability statement: {metrics.aafcoStatement} This is a manufacturer statement, not an independent verification of nutrient adequacy.</p>
+              )}
               {food.guaranteedAnalysis && (
                 <p>
                   Original label guarantees: {Object.entries(food.guaranteedAnalysis)
@@ -294,7 +303,7 @@ export default function DogFoodNutrientChart() {
             </div>
           );
         })}
-        <p style={{ color: "var(--slate)", fontSize: "0.85rem", marginBottom: 0 }}>Vitamin D3 cannot be compared against dry-matter AAFCO thresholds until its reporting basis is confirmed.</p>
+        <p style={{ color: "var(--slate)", fontSize: "0.85rem", marginBottom: 0 }}>Eukanuba vitamin D3 cannot be compared against dry-matter AAFCO thresholds until its reporting basis is confirmed. Manufacturer-reported concentrations and suitability statements do not independently establish nutritional adequacy.</p>
       </div>
 
       <div style={{ overflowX: "auto", marginTop: 20 }}>

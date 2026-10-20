@@ -12,10 +12,13 @@ export type DogFoodNutrition = {
   guaranteedAnalysis?: Partial<Record<string, NutrientMeasurement>>;
   // Non-percentage metrics are kept separately to avoid mislabeling units or basis.
   additionalMetrics?: {
-    vitaminD3?: { value: number; unit: "IU/kg"; basis: "Not specified" };
+    vitaminD3?: { value: number; unit: "IU/kg"; basis: "Not specified" | "Dry matter" };
     metabolizableEnergy?: { kcalPerKg: number; kcalPerCup: number };
     calciumPhosphorusRatio?: string;
     ash?: null;
+    minerals?: { label: string; value: number; unit: "%" | "mg/kg" }[];
+    vitamins?: { label: string; value: number; unit: "IU/kg" | "mg/kg" }[];
+    aafcoStatement?: string;
   };
   manufacturerDataSource?: string;
 };
@@ -25,11 +28,41 @@ export const dogFoods: DogFoodNutrition[] = [
     name: "Inukshuk 26/16",
     moistureMax: 10,
     values: {
+      protein: { value: 28.89, type: "Reported", basis: "Dry matter" },
+      fat: { value: 17.78, type: "Reported", basis: "Dry matter" },
+      fiber: { value: 3.70, type: "Reported", basis: "Dry matter" },
+      calcium: { value: 1.33, type: "Reported", basis: "Dry matter" },
+      phosphorus: { value: 1.11, type: "Reported", basis: "Dry matter" },
+      omega3: { value: 0.61, type: "Reported", basis: "Dry matter" },
+      omega6: { value: 3.63, type: "Reported", basis: "Dry matter" },
+    },
+    guaranteedAnalysis: {
       protein: { value: 26, type: "Minimum", basis: "As-fed" },
       fat: { value: 16, type: "Minimum", basis: "As-fed" },
       calcium: { value: 1.3, type: "Maximum", basis: "As-fed" },
       phosphorus: { value: 1.1, type: "Maximum", basis: "As-fed" },
     },
+    additionalMetrics: {
+      vitaminD3: { value: 1390, unit: "IU/kg", basis: "Dry matter" },
+      metabolizableEnergy: { kcalPerKg: 3630, kcalPerCup: 472 },
+      calciumPhosphorusRatio: "1.20:1",
+      minerals: [
+        { label: "Potassium", value: 0.74, unit: "%" },
+        { label: "Chloride", value: 0.94, unit: "%" },
+        { label: "Zinc", value: 217.8, unit: "mg/kg" },
+        { label: "Copper", value: 18.9, unit: "mg/kg" },
+        { label: "Selenium", value: 1.20, unit: "mg/kg" },
+      ],
+      vitamins: [
+        { label: "Vitamin A", value: 29144, unit: "IU/kg" },
+        { label: "Vitamin E", value: 120, unit: "IU/kg" },
+        { label: "Thiamine (B1)", value: 14.2, unit: "mg/kg" },
+        { label: "Riboflavin (B2)", value: 12.6, unit: "mg/kg" },
+        { label: "Pyridoxine (B6)", value: 4.3, unit: "mg/kg" },
+      ],
+      aafcoStatement: "Suitable for all life stages including growth of large size dogs (70 lbs or more as an adult).",
+    },
+    manufacturerDataSource: "Inukshuk Pro customer support email, October 20, 2026 (dry-matter nutrient values)",
   },
   {
     name: "Eukanuba Adult Medium",
