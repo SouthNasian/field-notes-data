@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArticleShell } from "@/components/ArticleShell";
 import NCIndustryDashboard from "@/components/NCIndustryDashboard";
 import DogFoodNutrientChart from "@/components/DogFoodNutrientChart";
+import DogFoodMethodology from "@/components/DogFoodMethodology";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { PortableArticle } from "@/sanity/components/PortableArticle";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -105,7 +106,12 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
         isNCIndustryInquiry
           ? <NCIndustryDashboard />
           : isDogFoodInquiry
-            ? <DogFoodNutrientChart />
+            ? (
+                <>
+                  <DogFoodNutrientChart />
+                  <DogFoodMethodology />
+                </>
+              )
             : undefined
       }
     >
