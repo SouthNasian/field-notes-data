@@ -7,12 +7,14 @@ import DogFoodMethodology from "@/components/DogFoodMethodology";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { PortableArticle } from "@/sanity/components/PortableArticle";
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { urlFor } from "@/sanity/lib/image";
 import { INQUIRY_QUERY } from "@/sanity/lib/queries";
 import type {PortableTextBlock} from "@portabletext/types";
 
 type Inquiry = {
   title:string; subtitle?:string|null; slug:string; publishedAt?:string|null;
   logNumber?:number|null; categories?:string[]|null; tags?:string[]|null;
+  heroImage?: { asset?: { _ref?: string | null } | null; alt?: string | null } | null;
   body?:PortableTextBlock[]; tools?:string[]|null;
   aiAssistance?:string|null; humanJudgment?:string|null; limitations?:string|null;
   dataSources?:{name?:string;url?:string;notes?:string}[]|null;
@@ -90,6 +92,9 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
   const isNCIndustryInquiry = slug === "north-carolina-industry-growth";
   const isDogFoodInquiry = slug === "dry-dog-food-nutrition-comparison";
   const hasDashboard = isNCIndustryInquiry || isDogFoodInquiry;
+  const heroImageUrl = isNCIndustryInquiry && item.heroImage?.asset?._ref
+    ? urlFor(item.heroImage).width(1800).auto("format").url()
+    : undefined;
 
   const opening = (
     <section id="opening">
@@ -101,6 +106,8 @@ export default async function InquiryPage({ params }: { params: Promise<{ slug: 
   return (
     <ArticleShell type="Inquiry" number={number} eyebrow={eyebrow} title={item.title}
       dek={item.subtitle || ""} date={displayDate(item.publishedAt)} visual="chart"
+      heroImageUrl={heroImageUrl}
+      heroImageAlt={item.heroImage?.alt || undefined}
       openingContent={hasDashboard ? opening : undefined}
       fullWidthContent={
         isNCIndustryInquiry
