@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { EChartsOption } from "echarts";
 import EChartsChart from "./EChartsChart";
+import { dogFoodClinicalReferences } from "../data/dogFoodClinicalReferences";
 import { dogFoods } from "../data/dogFoodNutrition";
 import {
   aafcoAdultMaintenance,
@@ -10,7 +11,8 @@ import {
 } from "../data/aafcoAdultMaintenance";
 
 type NutrientKey = "protein" | "fat" | "calcium" | "phosphorus" | "fiber" | "omega3" | "omega6";
-type ChartKey = NutrientKey | "price";
+type ChartKey = NutrientKey | "price" | "calories";
+type ReferenceMode = "aafco" | "normal" | "inactive" | "none";
 
 const nutrientKeys: NutrientKey[] = [
   "protein",
@@ -83,8 +85,15 @@ const availableNutrients = (Object.keys(nutrients) as NutrientKey[]).filter((key
 
 export default function DogFoodNutrientChart() {
   const [selected, setSelected] = useState<ChartKey>("protein");
+  const [referenceMode, setReferenceMode] = useState<ReferenceMode>("aafco");
   const isPrice = selected === "price";
-  const nutrient = isPrice ? null : nutrients[selected];
+  const isCalories = selected === "calories";
+  const isNutrient = !isPrice && !isCalories;
+  const nutrient = isNutrient ? nutrients[selected as NutrientKey] : null;
+  const reference = !isNutrient || referenceMode === "none" ? null
+    : referenceMode === "aafco" ? nutrient
+    : dogFoodClinicalReferences[referenceMode][selected];
+  const referenceLabel = referenceMode === "aafco" ? "AAFCO" : "Clinical recommendation";
 
   const option = useMemo<EChartsOption>(() => ({
     backgroundColor: "#FBFAF6",
@@ -100,7 +109,11 @@ export default function DogFoodNutrientChart() {
           const listing = chewyPrices[params.dataIndex];
           return `${food.name}<br/>$${(listing.price / listing.bagLb).toFixed(2)}/lb<br/>$${listing.price.toFixed(2)} for ${listing.bagLb} lb · Chewy`;
         }
-        const comparison = dryMatterComparison(food, selected);
+        if (selected === "calories") {
+          const kcal = food.additionalMetrics?.metabolizableEnergy?.kcalPerCup;
+          return `${food.name}<br/>${kcal == null ? "Calories per cup: Data not available" : `Calories per cup: ${kcal} kcal (manufacturer-reported)`}`;
+        }
+        const comparison = dryMatterComparison(food, selected as NutrientKey);
         const entry = food.values[selected];
         if (!comparison || !entry) return `${food.name}<br/>${nutrients[selected].label}: Data not available`;
         return `${food.name}<br/>${nutrients[selected].label}: ${comparison.value.toFixed(2)}% DM<br/>${comparison.qualifier}<br/>Original: ${entry.value}% ${entry.type.toLowerCase()} (${entry.basis})<br/>${comparison.explanation}`;
@@ -109,12 +122,12 @@ export default function DogFoodNutrientChart() {
     grid: { left: 175, right: 80, top: 40, bottom: 60 },
     xAxis: {
       type: "value",
-      // Keep the AAFCO upper limit visible even when all food bars are shorter.
-      max: nutrient?.max == null ? undefined : Math.ceil(nutrient.max * 1.3 * 10) / 10,
-      name: isPrice ? "Chewy price per pound (USD)" : "Dry-matter value or conservative bound (%)",
+      // Show reference upper bounds even when the food values are lower.
+      max: reference?.max == null ? undefined : Math.ceil(Math.max(reference.max, ...foods.map((food) => dryMatterComparison(food, selected as NutrientKey)?.value ?? 0)) * 1.25 * 10) / 10,
+      name: isPrice ? "Chewy price per pound (USD)" : isCalories ? "Metabolizable energy (kcal/cup)" : "Dry-matter value or conservative bound (%)",
       nameLocation: "middle",
       nameGap: 35,
-      axisLabel: { formatter: isPrice ? "${value}" : "{value}%" },
+      axisLabel: { formatter: isPrice ? "${value}" : isCalories ? "{value}" : "{value}%" },
       splitLine: { lineStyle: { color: "#D9D9D0" } },
     },
     yAxis: {
@@ -127,47 +140,50 @@ export default function DogFoodNutrientChart() {
       {
         type: "bar",
         barMaxWidth: 30,
-        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4))) : foods.map((food) => dryMatterComparison(food, selected as NutrientKey)?.value ?? null),
+        data: isPrice ? chewyPrices.map((listing) => Number((listing.price / listing.bagLb).toFixed(4)))
+          : isCalories ? foods.map((food) => food.additionalMetrics?.metabolizableEnergy?.kcalPerCup ?? null)
+          : foods.map((food) => dryMatterComparison(food, selected as NutrientKey)?.value ?? null),
         itemStyle: { color: "#29483A" },
         label: { show: true, position: "right", formatter: (params: any) => {
           if (isPrice) return `$${Number(params.value).toFixed(2)}`;
+          if (isCalories) return `${Number(params.value).toFixed(0)} kcal`;
           const comparison = dryMatterComparison(foods[params.dataIndex], selected as NutrientKey);
           if (!comparison) return "N/A";
           const symbol = comparison.qualifier === "DM lower bound" ? "≥" : comparison.qualifier === "DM upper bound" ? "≤" : "";
           return `${symbol}${comparison.value.toFixed(2)}%`;
         } },
-        markLine: isPrice ? undefined : {
+        markLine: !reference ? undefined : {
           symbol: "none",
           silent: true,
           data: [
-            ...(nutrient!.min === null
+            ...(reference.min === null
   ? []
   : [{
-      name: "AAFCO minimum",
-      xAxis: nutrient!.min!,
+      name: `${referenceLabel} minimum`,
+      xAxis: reference.min!,
       lineStyle: {
         color: "#B88938",
         type: "dashed" as const,
         width: 2,
       },
       label: {
-        formatter: "AAFCO min",
+        formatter: referenceMode === "aafco" ? "AAFCO min" : "Recommended min",
         position: "insideEndBottom" as const,
       },
     }]),
-            ...(nutrient!.max === null
+            ...(reference.max === null
               ? []
               : [{
-                  name: "AAFCO maximum",
-                  xAxis: nutrient!.max!,
+                  name: `${referenceLabel} maximum`,
+                  xAxis: reference.max!,
                   lineStyle: { color: "#B65F3C", type: "dashed" as const, width: 2 },
-                  label: { formatter: "AAFCO max", position: "insideEndTop" as const },
+                  label: { formatter: referenceMode === "aafco" ? "AAFCO max" : "Recommended max", position: "insideEndTop" as const },
                 }]),
           ],
         },
       },
     ],
-  }), [selected, nutrient, isPrice]);
+  }), [selected, nutrient, isPrice, isCalories, reference, referenceLabel, referenceMode]);
 
   return (
     <section
@@ -200,7 +216,27 @@ export default function DogFoodNutrientChart() {
           <option key={key} value={key}>{nutrients[key].label}</option>
         ))}
         <option value="price">Price per Pound (Chewy)</option>
+        <option value="calories">Calories per Cup (kcal/cup)</option>
       </select>
+
+      {isNutrient && (
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="dog-food-reference">Reference lines</label>
+          <select id="dog-food-reference" value={referenceMode}
+            onChange={(event) => setReferenceMode(event.target.value as ReferenceMode)}
+            style={{ display: "block", marginTop: 8, padding: 10, background: "var(--paper)", color: "var(--charcoal)", border: "1px solid var(--line)" }}>
+            <option value="aafco">AAFCO adult-maintenance thresholds</option>
+            <option value="normal">Clinical recommendations — normal body condition</option>
+            <option value="inactive">Clinical recommendations — inactive / obesity-prone</option>
+            <option value="none">No reference lines</option>
+          </select>
+          {referenceMode === "normal" || referenceMode === "inactive" ? (
+            <p style={{ color: "var(--slate)", fontSize: "0.85rem" }}>
+              Small Animal Clinical Nutrition, 5th ed., Chapter 13, Table 13-3 (p. 261). Recommended food levels, not regulatory limits or toxicity thresholds. Values are dry-matter based and assume 4.0 kcal/g; energy-density adjustment may be needed. A missing line means no matching recommendation in this table.
+            </p>
+          ) : null}
+        </div>
+      )}
 
       <div role="region" aria-label="Scrollable dog food nutrient chart" tabIndex={0} style={{ overflowX: "auto" }}>
         <div style={{ minWidth: 650 }}>
@@ -209,7 +245,9 @@ export default function DogFoodNutrientChart() {
       </div>
 
       <p style={{ color: "var(--slate)", fontSize: "0.85rem", lineHeight: 1.6 }}>
-        {isPrice
+        {isCalories
+          ? "Calories per cup are manufacturer-reported metabolizable energy per measuring cup, not dry-matter nutrient percentages. Purina's value is unavailable pending its manufacturer response. Cup sizes and kibble densities vary; kcal/cup is not the same as kcal/g."
+          : isPrice
           ? "Chewy advertised one-time purchase prices, checked October 17, 2026. Price per pound = bag price / bag weight. Excludes taxes, shipping, Autoship discounts, and promotions. Prices and availability may change."
           : "All plotted nutrient values are on a dry-matter basis. Inukshuk and Eukanuba have manufacturer-reported dry-matter concentrations (October 20 and October 19, 2026, respectively); Purina currently has guaranteed-analysis bounds rather than measured concentrations. ≥ indicates a lower bound derived from an as-fed guaranteed minimum; ≤ indicates an upper bound derived from an as-fed guaranteed maximum and maximum moisture. Fiber and total omega-3/omega-6 have no AAFCO concentration reference lines in this dataset. AAFCO lines are reference thresholds, not optimal targets; these bounds alone do not confirm complete nutritional adequacy."}
       </p>
@@ -307,7 +345,18 @@ export default function DogFoodNutrientChart() {
       </div>
 
       <div style={{ overflowX: "auto", marginTop: 20 }}>
-        {isPrice ? (
+        {isCalories ? (
+          <table style={{ width: "100%", minWidth: 540, borderCollapse: "collapse" }}>
+            <thead><tr><th style={{ textAlign: "left" }}>Food</th><th>Calories per cup</th><th>Source</th></tr></thead>
+            <tbody>{foods.map((food) => (
+              <tr key={food.name}>
+                <td>{food.name}</td>
+                <td style={{ textAlign: "center" }}>{food.additionalMetrics?.metabolizableEnergy?.kcalPerCup == null ? "Data not available" : `${food.additionalMetrics.metabolizableEnergy.kcalPerCup} kcal`}</td>
+                <td style={{ textAlign: "center" }}>{food.additionalMetrics?.metabolizableEnergy ? (food.manufacturerDataSource ?? "Manufacturer") : "Awaiting manufacturer response"}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        ) : isPrice ? (
           <table style={{ width: "100%", minWidth: 540, borderCollapse: "collapse" }}>
             <thead><tr><th style={{ textAlign: "left" }}>Food</th><th>Bag weight</th><th>Bag price</th><th>Cost/lb</th><th>Retailer</th></tr></thead>
             <tbody>{chewyPrices.map((listing) => (
