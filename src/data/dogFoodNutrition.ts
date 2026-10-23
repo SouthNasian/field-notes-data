@@ -89,31 +89,41 @@ export const dogFoods: DogFoodNutrition[] = [
     manufacturerDataSource: "Eukanuba customer support email, October 19, 2026",
   },
   {
-    name: "Purina Pro Plan",
-    moistureMax: 12,
-    values: {
-      protein: { value: 29.90, type: "Reported", basis: "Dry matter" },
-      fat: { value: 19.00, type: "Reported", basis: "Dry matter" },
-      fiber: { value: 1.60, type: "Reported", basis: "Dry matter" },
-      calcium: { value: 1.51, type: "Reported", basis: "Dry matter" },
-      phosphorus: { value: 1.12, type: "Reported", basis: "Dry matter" },
-    },
-    guaranteedAnalysis: {
-      protein: { value: 26, type: "Minimum", basis: "As-fed" },
-      fat: { value: 16, type: "Minimum", basis: "As-fed" },
-      calcium: { value: 1, type: "Minimum", basis: "As-fed" },
-      phosphorus: { value: 0.8, type: "Minimum", basis: "As-fed" },
-    },
-    additionalMetrics: {
-      metabolizableEnergy: { kcalPerKg: 4038, kcalPerCup: 387 },
-      calciumPhosphorusRatio: "1.35:1 (calculated from rounded dry-matter values)",
-      minerals: [
-        { label: "Potassium", value: 0.80, unit: "%" },
-        { label: "Sodium", value: 0.45, unit: "%" },
-        { label: "Chloride", value: 0.81, unit: "%" },
-        { label: "Magnesium", value: 0.14, unit: "%" },
-      ],
-    },
-    manufacturerDataSource: "Purina Pro Plan Complete Essentials Adult Shredded Blend Chicken & Rice nutritional information screenshot (formula match believed, not independently confirmed; average values)",
+
+
+  name: "Purina Pro Plan",
+  // Manufacturer-reported moisture, not a guaranteed maximum.
+  moistureMax: 8.7,
+  values: {
+    protein: { value: 29.57, type: "Reported", basis: "Dry matter" },
+    fat: { value: 19.28, type: "Reported", basis: "Dry matter" },
+    fiber: { value: 1.86, type: "Reported", basis: "Dry matter" },
+    calcium: { value: 1.48, type: "Reported", basis: "Dry matter" },
+    phosphorus: { value: 1.12, type: "Reported", basis: "Dry matter" },
+    omega3: { value: 0.02, type: "Reported", basis: "Dry matter" },
+    omega6: { value: 2.39, type: "Reported", basis: "Dry matter" },
+    carbohydrates: { value: 41.29, type: "Reported", basis: "Dry matter" },
+    ash: { value: 8.00, type: "Reported", basis: "Dry matter" },
   },
+  guaranteedAnalysis: {
+    protein: { value: 26, type: "Minimum", basis: "As-fed" },
+    fat: { value: 16, type: "Minimum", basis: "As-fed" },
+    calcium: { value: 1, type: "Minimum", basis: "As-fed" },
+    phosphorus: { value: 0.8, type: "Minimum", basis: "As-fed" },
+  },
+  additionalMetrics: {
+    // kcal/kg is a legacy value, not verified by the new email.
+    metabolizableEnergy: { kcalPerKg: 4038, kcalPerCup: 369 },
+    calciumPhosphorusRatio: "1.32:1 (calculated from as-fed values)",
+    minerals: [
+      { label: "Potassium", value: 0.80, unit: "%" },
+      { label: "Sodium", value: 0.45, unit: "%" },
+      { label: "Chloride", value: 0.81, unit: "%" },
+      { label: "Magnesium", value: 0.14, unit: "%" },
+    ],
+  },
+  manufacturerDataSource:
+    "Nestlé Purina PetCare email, October 23, 2026, case 25349247. As-fed values converted to dry matter using 8.7% moisture. Calories: 369 kcal/cup. Legacy kcal/kg and supplemental minerals not verified by this email.",
+},
+
 ];
